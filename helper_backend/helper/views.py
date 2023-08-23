@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
@@ -44,3 +44,20 @@ def signup(request):
     except Exception as e:
         print(e)
         return response_very_bad
+
+
+@csrf_exempt
+def signin(request):
+    try:
+        resp = request.POST
+        try:
+            user = authenticate(username=resp["username"], password=resp["password"])
+        except:
+            user = None
+        if user:
+            return HttpResponse(0)
+        else:
+            return HttpResponse(1)
+    except Exception as e:
+        print(e)
+        return HttpResponse(-1)
