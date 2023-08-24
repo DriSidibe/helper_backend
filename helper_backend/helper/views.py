@@ -1,7 +1,8 @@
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+
+from helper.models import CustomUser
 
 
 def home(request):
@@ -18,20 +19,21 @@ def signup(request):
     try:
         resp = request.POST
         try:
-            user1 = User.objects.get(username=resp["username"])
+            user1 = CustomUser.objects.get(username=resp["username"])
         except:
             user1 = None
             try:
-                user2 = User.objects.get(email=resp["email"])
+                user2 = CustomUser.objects.get(email=resp["email"])
             except:
                 user2 = None
         if (user1) or (user2):
             return response_bad
         else:
-            user = User.objects.create_user(
+            user = CustomUser.objects.create_user(
                 username=resp["username"],
                 email=resp["email"],
                 password=resp["password"],
+                avatar=resp["avatar"],
             )
             user.last_name = resp["lastname"]
             user.first_name = resp["firstname"]
@@ -55,7 +57,8 @@ def signin(request):
         except:
             user = None
         if user:
-            return HttpResponse(0)
+            user = CustomUser.objects.get(username=resp["username"])
+            return JsonResponse({"status": 0, "avatar": user.avatar})
         else:
             return HttpResponse(1)
     except Exception as e:
