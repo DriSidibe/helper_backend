@@ -2,7 +2,7 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate
 
-from helper.models import CustomUser
+from helper.models import CustomUser, TutorialField
 
 
 def home(request):
@@ -44,7 +44,6 @@ def signup(request):
             else:
                 return response_very_bad
     except Exception as e:
-        print(e)
         return response_very_bad
 
 
@@ -63,4 +62,21 @@ def signin(request):
             return HttpResponse(1)
     except Exception as e:
         print(e)
+        return HttpResponse(-1)
+
+
+def tutorials(request):
+    try:
+        tutorials = TutorialField.objects.all()
+        tutorialsDict = {}
+        i = 0
+        for tutorial in tutorials:
+            tutorialsDict[i] = {
+                "label": tutorial.label,
+                "thumbnail": tutorial.thumbnail,
+                "description": tutorial.description,
+            }
+            i += 1
+        return JsonResponse(tutorialsDict)
+    except:
         return HttpResponse(-1)
