@@ -2,7 +2,7 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate
 
-from helper.models import CustomUser, TutorialField
+from helper.models import CustomUser, TutorialField, Chapiter
 
 
 def home(request):
@@ -78,5 +78,36 @@ def tutorials(request):
             }
             i += 1
         return JsonResponse(tutorialsDict)
+    except:
+        return HttpResponse(-1)
+
+
+def tutorials_chapiters(request, tutorialTitle):
+    try:
+        tutorial = TutorialField.objects.get(label=tutorialTitle)
+        tutorials_chapiters = Chapiter.objects.get(tutorialField=tutorial)
+        tutorialsChapitersDict = {}
+        i = 0
+        try:
+            for chapiter in tutorials_chapiters:
+                tutorialsChapitersDict[i] = {
+                    "label": chapiter.label,
+                    "thumbnail": chapiter.thumbnail,
+                    "content": chapiter.content,
+                    "chapiterNumber": chapiter.chapiterNumber,
+                    "nextChapiter": chapiter.nextChapiter,
+                    "previewChapiter": chapiter.previewChapiter,
+                }
+                i += 1
+        except:
+            tutorialsChapitersDict[i] = {
+                "label": tutorials_chapiters.label,
+                "thumbnail": tutorials_chapiters.thumbnail,
+                "content": tutorials_chapiters.content,
+                "chapiterNumber": tutorials_chapiters.chapiterNumber,
+                "nextChapiter": tutorials_chapiters.nextChapiter,
+                "previewChapiter": tutorials_chapiters.previewChapiter,
+            }
+        return JsonResponse(tutorialsChapitersDict)
     except:
         return HttpResponse(-1)

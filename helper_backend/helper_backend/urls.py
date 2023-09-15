@@ -25,5 +25,6 @@ urlpatterns = [
     path("signup/", views.signup),
     path("signin/", views.signin),
     path("tutorials/", views.tutorials),
+    path("tutorials/<str:tutorialTitle>/chapiters/", views.tutorials_chapiters),
     path("", views.home),
 ]
