@@ -85,7 +85,8 @@ def tutorials(request):
 def tutorials_chapiters(request, tutorialTitle):
     try:
         tutorial = TutorialField.objects.get(label=tutorialTitle)
-        tutorials_chapiters = Chapiter.objects.get(tutorialField=tutorial)
+        tutorials_chapiters = Chapiter.objects.filter(tutorialField=tutorial)
+        print(tutorials_chapiters)
         tutorialsChapitersDict = {}
         i = 0
         try:
@@ -109,5 +110,37 @@ def tutorials_chapiters(request, tutorialTitle):
                 "previewChapiter": tutorials_chapiters.previewChapiter,
             }
         return JsonResponse(tutorialsChapitersDict)
+    except:
+        return HttpResponse(-1)
+
+
+def tutorials_chapiters_by_number(request, number):
+    try:
+        chapiter = Chapiter.objects.get(chapiterNumber=number)
+        chapiterDict = {}
+        chapiterDict["label"] = chapiter.label
+        chapiterDict["thumbnail"] = chapiter.thumbnail
+        chapiterDict["content"] = chapiter.content
+        chapiterDict["chapiterNumber"] = chapiter.chapiterNumber
+        chapiterDict["nextChapiter"] = chapiter.nextChapiter
+        chapiterDict["previewChapiter"] = chapiter.previewChapiter
+        return JsonResponse(chapiterDict)
+    except:
+        return HttpResponse(-1)
+
+
+def tutorials_by_field_and_chapiters(request, field, chapiter):
+    try:
+        chapiter = " ".join(chapiter.split("_"))
+        tutorial = TutorialField.objects.get(label=field)
+        chapiter = Chapiter.objects.get(tutorialField=tutorial, label=chapiter)
+        chapiterDict = {}
+        chapiterDict["label"] = chapiter.label
+        chapiterDict["thumbnail"] = chapiter.thumbnail
+        chapiterDict["content"] = chapiter.content
+        chapiterDict["chapiterNumber"] = chapiter.chapiterNumber
+        chapiterDict["nextChapiter"] = chapiter.nextChapiter
+        chapiterDict["previewChapiter"] = chapiter.previewChapiter
+        return JsonResponse(chapiterDict)
     except:
         return HttpResponse(-1)

@@ -26,5 +26,9 @@ urlpatterns = [
     path("signin/", views.signin),
     path("tutorials/", views.tutorials),
     path("tutorials/<str:tutorialTitle>/chapiters/", views.tutorials_chapiters),
+    path("tutorials/chapiters/<str:number>", views.tutorials_chapiters_by_number),
+    path(
+        "tutorials/<str:field>/<str:chapiter>", views.tutorials_by_field_and_chapiters
+    ),
     path("", views.home),
 ]
